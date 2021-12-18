@@ -889,7 +889,6 @@ The 'Prop' typing rule lets us type functions that return proofs or programs.
 
 Example such a term might represent:
 
-
 *)
 (* L1: Simple types *)
 (* ================ *)
@@ -905,6 +904,9 @@ Check (nat -> 1 < 2).
 (* Same, restated with dependent product syntax *)
 Check (forall n: nat, 1 < 2).
 (* Actually defining dependent product *)
+
+Open Scope nat_scope.
+
 Check (forall n: nat, n < 2).
 
 (* s=Prop, s'=Set *)
@@ -1007,13 +1009,13 @@ Eval compute in (diag nat nat (fun a b => a) 0).
 
 (* Ex 5.3 *)
 
-Theorem tr : ~False.
+Theorem ex53_1 : ~False.
 Proof.
 intro.
 exact H.
 Qed.
 
-Theorem nnn_eq_n: forall P: Prop, ~~~P -> ~P.
+Theorem ex53_2: forall P: Prop, ~~~P -> ~P.
 Proof.
 
 intros Prp H P.
@@ -1024,7 +1026,57 @@ intro.
 exact (H0 P).
 Qed.
 
-Check False_ind.
+Theorem ex53_3: forall P Q: Prop, ~~~P -> P -> Q.
+intros.
+
+exfalso.
+
+apply H.
+intro.
+
+exact (H1 H0).
+Qed.
+
+Theorem ex53_4: forall P Q: Prop, (P -> Q) -> ~Q -> ~P.
+intros.
+intro.
+exact (H0 (H H1)).
+Qed.
+
+Theorem ex53_5: forall P Q R: Prop, (P -> Q) -> (P -> ~Q) -> P -> R.
+intros.
+exfalso.
+exact ((H0 H1) (H H1)).
+Qed.
+
+(* Ex 5.4 *)
+
+Theorem ex54_1: ~(forall P Q: Prop, (P -> Q) -> (Q -> P)).
+intro.
+
+apply (H False True).
+
+intro.
+elim H0.
+
+trivial.
+Qed.
+
+Theorem ex54_2: ~(forall P Q: Prop, (P -> Q) -> (~P -> ~Q)).
+
+intro.
+apply (H False True).
+
+intro.
+elim H0.
+
+intro.
+elim H0.
+
+trivial.
+Qed.
+
+(* Ex 5.5 *)
 
 Theorem ex55 : forall (A: Set) (a b c d: A), a=c \/ b=c \/ c=c \/ d=c.
 
@@ -1040,8 +1092,22 @@ Check eq_refl.
 exact eq_refl.
 Qed.
 
+(* Ex 5.6 *)
 
-Theorem ex56_1 : forall (A B C D: Prop), (A -> B) /\ (C -> D) /\ A /\ C -> B /\ D.
+Theorem ex56_1 : forall (A B C: Prop), A /\ (B /\ C) -> (A /\ B) /\ C.
+Proof.
+
+intros.
+
+case H as [H1 [H2 H3]].
+split.
+
+exact (conj H1 H2).
+
+exact H3.
+Qed.
+
+Theorem ex56_2 : forall (A B C D: Prop), (A -> B) /\ (C -> D) /\ A /\ C -> B /\ D.
 Proof.
 
 intros.
@@ -1053,8 +1119,154 @@ exact (H1 H3).
 exact (H2 H4).
 Qed.
 
-Theorem yl : forall (F: Type -> Prop), (forall (B: Prop), (nat -> B) -> F B) -> F nat.
+Theorem ex56_3 : forall A: Prop, ~(A /\ ~A).
 Proof.
 
 intros.
+intro.
+case H as [HA HNA].
+exact (HNA HA).
+Qed.
+
+Theorem ex56_4 : forall A B C: Prop, A \/ (B \/ C) -> (A \/ B) \/ C.
+Proof.
+
+intros.
+
+case H as [H1 | [H2 | H3]].
+left.
+left.
+assumption.
+
+left.
+right.
+assumption.
+
+right.
+assumption.
+
+Qed.
+
+
+Theorem ex56_5 : forall A: Prop, ~~(A \/ ~A).
+intros.
+intro.
+apply H.
+right.
+intro.
+apply H.
+left.
+exact H0.
+Qed.
+
+Theorem ex56_6 : forall A B: Prop, (A \/ B) /\ ~A -> B.
+intros.
+case H as [H1 H2].
+case H1 as [H1A | H1B].
+
+elim (H2 H1A).
+
+exact H1B.
+Qed.
+
+(* Ex 5.7 *)
+
+Theorem ex57_peirce_imp_classic : (forall P Q: Prop, ((P -> Q) -> P) -> P) -> (forall R: Prop, ~~R -> R).
+intros.
+
+apply (H R False).
+intro.
+elim (H0 H1).
+Qed.
+
+Theorem ex57_classic_imp_exclmiddle : (forall R: Prop, ~~R -> R) -> (forall P: Prop, P \/ ~P).
+intros.
+
+apply H.
+exact (ex56_5 P).
+Qed.
+
+Theorem ex57_exclmiddle_imp_demorgannotandnot : (forall P: Prop, P \/ ~P) -> (forall P Q: Prop, ~(~P /\ ~Q) -> P \/ Q).
+intros.
+
+case (H P) as [H1 | H2].
+
+left.
+exact H1.
+
+right.
+
+case (H Q) as [HQ1 | HQ2].
+
+exact  HQ1.
+
+exfalso.
+exact (H0 (conj H2 HQ2)).
+Qed.
+
+Theorem ex57_demorgannotandnot_imp_impliestoor : (forall P Q: Prop, ~(~P /\ ~Q) -> P \/ Q) -> (forall P Q: Prop, (P -> Q) -> (~P \/ Q)).
+intros.
+
+apply (H (~P) Q).
+
+intro.
+
+case H1 as [H1A H1B].
+
+apply H1A.
+intro.
+
+apply (ex56_3 Q).
+
+exact (conj (H0 H1) H1B).
+Qed.
+
+(* TODO *)
+(* Theorem ex57_impliestoor_imp_peirce
+  :
+  (forall P Q: Prop, (P -> Q) -> (~P \/ Q))
+  ->
+  (forall R S: Prop, ((R -> S) -> R) -> R)
+  .
+
+intros.
+
+apply H0.
+intro.
+intuition. *)
+
+(*
+More Tacticals
+==============
+
+repeat
+------
+
+Repeat a tactic until failure or complete success
+*)
+
+(* Ex 5.8 *)
+
+(* Ex 5.8.1 *)
+(* Q. What does the tactic `repeat idtac` do? *)
+(* A.
+
+The textbook says:
+'apply <tactic> until failure or complete success'
+
+I think it would loop indefinitely. *)
+
+Theorem ex58_1 : forall A: Prop, A -> A.
+intros.
+idtac.
+repeat idtac.
+
+(* Ex 5.8.2 *)
+(* Q. What does the tactic `repeat fail` do? *)
+(* A. . *)
+
+Theorem ex58_1 : forall A: Prop, A -> A.
+intros.
+idtac.
+repeat idtac.
 
