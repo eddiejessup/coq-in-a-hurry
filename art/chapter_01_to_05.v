@@ -451,6 +451,8 @@ E, G |- P : Prop        E, G |- Q : Prop
 
 *)
 
+(* Chapter 3: Propositions and Proofs *)
+
 (* Ex 3.1
 
 Type this:
@@ -1007,15 +1009,17 @@ Definition diag: forall (A B: Set), (A -> A -> B) -> A -> B
 
 Eval compute in (diag nat nat (fun a b => a) 0).
 
+(* Chapter 5: Practical Aspects of Dependent Products *)
+
 (* Ex 5.3 *)
 
-Theorem ex53_1 : ~False.
+Theorem ex_5_3_1 : ~False.
 Proof.
 intro.
 exact H.
 Qed.
 
-Theorem ex53_2: forall P: Prop, ~~~P -> ~P.
+Theorem ex_5_3_2: forall P: Prop, ~~~P -> ~P.
 Proof.
 
 intros Prp H P.
@@ -1026,7 +1030,7 @@ intro.
 exact (H0 P).
 Qed.
 
-Theorem ex53_3: forall P Q: Prop, ~~~P -> P -> Q.
+Theorem ex_5_3_3: forall P Q: Prop, ~~~P -> P -> Q.
 intros.
 
 exfalso.
@@ -1037,13 +1041,13 @@ intro.
 exact (H1 H0).
 Qed.
 
-Theorem ex53_4: forall P Q: Prop, (P -> Q) -> ~Q -> ~P.
+Theorem ex_5_3_4: forall P Q: Prop, (P -> Q) -> ~Q -> ~P.
 intros.
 intro.
 exact (H0 (H H1)).
 Qed.
 
-Theorem ex53_5: forall P Q R: Prop, (P -> Q) -> (P -> ~Q) -> P -> R.
+Theorem ex_5_3_5: forall P Q R: Prop, (P -> Q) -> (P -> ~Q) -> P -> R.
 intros.
 exfalso.
 exact ((H0 H1) (H H1)).
@@ -1051,7 +1055,7 @@ Qed.
 
 (* Ex 5.4 *)
 
-Theorem ex54_1: ~(forall P Q: Prop, (P -> Q) -> (Q -> P)).
+Theorem ex_5_4_1: ~(forall P Q: Prop, (P -> Q) -> (Q -> P)).
 intro.
 
 apply (H False True).
@@ -1062,7 +1066,7 @@ elim H0.
 trivial.
 Qed.
 
-Theorem ex54_2: ~(forall P Q: Prop, (P -> Q) -> (~P -> ~Q)).
+Theorem ex_5_4_2: ~(forall P Q: Prop, (P -> Q) -> (~P -> ~Q)).
 
 intro.
 apply (H False True).
@@ -1078,7 +1082,7 @@ Qed.
 
 (* Ex 5.5 *)
 
-Theorem ex55 : forall (A: Set) (a b c d: A), a=c \/ b=c \/ c=c \/ d=c.
+Theorem ex_5_5 : forall (A: Set) (a b c d: A), a=c \/ b=c \/ c=c \/ d=c.
 
 Proof.
 
@@ -1094,7 +1098,7 @@ Qed.
 
 (* Ex 5.6 *)
 
-Theorem ex56_1 : forall (A B C: Prop), A /\ (B /\ C) -> (A /\ B) /\ C.
+Theorem ex_5_6_1 : forall (A B C: Prop), A /\ (B /\ C) -> (A /\ B) /\ C.
 Proof.
 
 intros.
@@ -1107,7 +1111,7 @@ exact (conj H1 H2).
 exact H3.
 Qed.
 
-Theorem ex56_2 : forall (A B C D: Prop), (A -> B) /\ (C -> D) /\ A /\ C -> B /\ D.
+Theorem ex_5_6_2 : forall (A B C D: Prop), (A -> B) /\ (C -> D) /\ A /\ C -> B /\ D.
 Proof.
 
 intros.
@@ -1119,7 +1123,7 @@ exact (H1 H3).
 exact (H2 H4).
 Qed.
 
-Theorem ex56_3 : forall A: Prop, ~(A /\ ~A).
+Theorem ex_5_6_3 : forall A: Prop, ~(A /\ ~A).
 Proof.
 
 intros.
@@ -1128,7 +1132,7 @@ case H as [HA HNA].
 exact (HNA HA).
 Qed.
 
-Theorem ex56_4 : forall A B C: Prop, A \/ (B \/ C) -> (A \/ B) \/ C.
+Theorem ex_5_6_4 : forall A B C: Prop, A \/ (B \/ C) -> (A \/ B) \/ C.
 Proof.
 
 intros.
@@ -1148,7 +1152,7 @@ assumption.
 Qed.
 
 
-Theorem ex56_5 : forall A: Prop, ~~(A \/ ~A).
+Theorem ex_5_6_5 : forall A: Prop, ~~(A \/ ~A).
 intros.
 intro.
 apply H.
@@ -1159,7 +1163,7 @@ left.
 exact H0.
 Qed.
 
-Theorem ex56_6 : forall A B: Prop, (A \/ B) /\ ~A -> B.
+Theorem ex_5_6_6 : forall A B: Prop, (A \/ B) /\ ~A -> B.
 intros.
 case H as [H1 H2].
 case H1 as [H1A | H1B].
@@ -1171,7 +1175,7 @@ Qed.
 
 (* Ex 5.7 *)
 
-Theorem ex57_peirce_imp_classic : (forall P Q: Prop, ((P -> Q) -> P) -> P) -> (forall R: Prop, ~~R -> R).
+Theorem ex_5_7_peirce_imp_classic : (forall P Q: Prop, ((P -> Q) -> P) -> P) -> (forall R: Prop, ~~R -> R).
 intros.
 
 apply (H R False).
@@ -1179,14 +1183,14 @@ intro.
 elim (H0 H1).
 Qed.
 
-Theorem ex57_classic_imp_exclmiddle : (forall R: Prop, ~~R -> R) -> (forall P: Prop, P \/ ~P).
+Theorem ex_5_7_classic_imp_exclmiddle : (forall R: Prop, ~~R -> R) -> (forall P: Prop, P \/ ~P).
 intros.
 
 apply H.
 exact (ex56_5 P).
 Qed.
 
-Theorem ex57_exclmiddle_imp_demorgannotandnot : (forall P: Prop, P \/ ~P) -> (forall P Q: Prop, ~(~P /\ ~Q) -> P \/ Q).
+Theorem ex_5_7_exclmiddle_imp_demorgannotandnot : (forall P: Prop, P \/ ~P) -> (forall P Q: Prop, ~(~P /\ ~Q) -> P \/ Q).
 intros.
 
 case (H P) as [H1 | H2].
@@ -1204,7 +1208,7 @@ exfalso.
 exact (H0 (conj H2 HQ2)).
 Qed.
 
-Theorem ex57_demorgannotandnot_imp_impliestoor : (forall P Q: Prop, ~(~P /\ ~Q) -> P \/ Q) -> (forall P Q: Prop, (P -> Q) -> (~P \/ Q)).
+Theorem ex_5_7_demorgannotandnot_imp_impliestoor : (forall P Q: Prop, ~(~P /\ ~Q) -> P \/ Q) -> (forall P Q: Prop, (P -> Q) -> (~P \/ Q)).
 intros.
 
 apply (H (~P) Q).
@@ -1222,7 +1226,7 @@ exact (conj (H0 H1) H1B).
 Qed.
 
 (* TODO *)
-(* Theorem ex57_impliestoor_imp_peirce
+(* Theorem ex_5_7_impliestoor_imp_peirce
   :
   (forall P Q: Prop, (P -> Q) -> (~P \/ Q))
   ->
@@ -1254,19 +1258,407 @@ Repeat a tactic until failure or complete success
 The textbook says:
 'apply <tactic> until failure or complete success'
 
-I think it would loop indefinitely. *)
+I think it would loop indefinitely, because `idtac` never fails, nor completely succeeds. *)
 
-Theorem ex58_1 : forall A: Prop, A -> A.
+Theorem ex_5_8_1 : forall A: Prop, A -> A.
 intros.
 idtac.
 repeat idtac.
+exact H.
+Qed.
 
 (* Ex 5.8.2 *)
 (* Q. What does the tactic `repeat fail` do? *)
-(* A. . *)
+(* A.
 
-Theorem ex58_1 : forall A: Prop, A -> A.
+I think it will do nothing, because `fail` fails, so the end-condition for
+`repeat` will be satisfied after one iteration.
+*)
+
+Theorem ex_5_8_2 : forall A: Prop, A -> A.
 intros.
-idtac.
-repeat idtac.
+repeat fail.
+exact H.
+Qed.
 
+(* Ex 5.9 *)
+
+(* Ex 5.9.1 *)
+
+
+Section ex59.
+
+  Variables A : Set.
+  Variables P Q : A -> Prop.
+
+  Theorem ex_5_9_1 : (exists x:A, P x \/ Q x) -> (ex P) \/ (ex Q).
+    intro H.
+    elim H.
+    intros x Hx.
+    case Hx as [HxP | HxQ].
+
+    left.
+    exists x.
+    exact HxP.
+
+    right.
+    exists x.
+    exact HxQ.
+
+    Qed.
+
+  Theorem ex_5_9_2 : (ex P) \/ (ex Q) -> exists x:A, P x \/ Q x.
+    intro H.
+
+    case H as [HP | HQ].
+
+    elim HP.
+    intros x Px.
+    exists x.
+    left.
+    exact Px.
+
+    elim HQ.
+    intros x Qx.
+    exists x.
+    right.
+    exact Qx.
+
+    Qed.
+
+  Theorem ex_5_9_3 : (forall x:A, P x) -> ~(exists y:A, ~P y).
+    intro Pxx.
+    intro.
+    elim H.
+    intros x nPx.
+    apply nPx.
+    exact (Pxx x).
+    Qed.
+End ex59.
+
+(* Ex 5.10 *)
+Theorem plus_permute2 : forall n m p : nat, n + m + p = n + p + m.
+  intros n m p.
+  rewrite <- plus_assoc.
+  rewrite <- plus_assoc.
+  rewrite (plus_comm m p).
+  reflexivity.
+Qed.
+
+(* Ex 5.11 *)
+Theorem eq_trans_manual : forall (A: Type) (x y z : A), x = y -> y = z -> x = z.
+intros A x y z.
+intros xeqy yeqz.
+exact (eq_ind y (eq x) xeqy z yeqz).
+Qed.
+
+(* Using rewrites *)
+Theorem eq_trans_rw : forall (A: Type) (x y z : A), x = y -> y = z -> x = z.
+
+intros A x y z.
+intros xeqy yeqz.
+rewrite xeqy.
+rewrite yeqz.
+reflexivity.
+Qed.
+
+(* Ex 5.12 *)
+
+Definition my_True : Prop := forall P: Prop, P -> P.
+
+Definition my_False : Prop := forall P: Prop, P.
+
+Check my_True.
+
+Check id.
+
+Theorem my_I : my_True.
+exact id.
+Qed.
+
+Definition my_I_prog : my_True := fun P x => x.
+
+
+Theorem my_False_ind : forall P: Prop, my_False -> P.
+intros P f.
+exact (f P).
+Qed.
+
+Definition my_False_ind_prog : forall P: Prop, my_False -> P
+  := fun P f => f P.
+
+
+(* Ex 5.13 *)
+
+Definition my_not (P: Prop) : Prop := P -> my_False.
+
+Theorem ex_5_13_a : my_not (my_False).
+exact (id my_False).
+Qed.
+
+Theorem ex_5_13_b : forall P: Prop, my_not (my_not(my_not(P))) -> my_not(P).
+intro.
+unfold my_not.
+intros H p.
+apply H.
+intro pToF.
+apply pToF.
+exact p.
+Qed.
+
+Theorem ex_5_13_c : forall P Q: Prop, my_not (my_not(my_not(P))) -> P -> Q.
+intros P Q H p.
+unfold my_not in H.
+apply H.
+intro pToF.
+apply pToF.
+exact p.
+Qed.
+
+Theorem ex_5_13_d : forall P Q: Prop, (P -> Q) -> my_not(Q) -> my_not(P).
+intros P Q pq nq.
+unfold my_not.
+intro p.
+unfold my_not in nq.
+apply nq.
+apply pq.
+exact p.
+Qed.
+
+Theorem ex_5_13_e : forall P Q R: Prop, (P -> Q) -> (P -> my_not(Q)) -> P -> R.
+intros P Q R pq pnq p.
+unfold my_not in pnq.
+apply pnq.
+exact p.
+apply pq.
+exact p.
+Qed.
+
+Section leibniz.
+  Set Implicit Arguments.
+  Unset Strict Implicit.
+
+  Variable A: Set.
+
+  Definition leibniz (a b : A) : Prop :=
+    forall P: A -> Prop, P a -> P b.
+
+  Require Import Relations.
+
+  Theorem leibniz_sym : symmetric A leibniz.
+    unfold symmetric.
+
+    unfold leibniz.
+    intros x y H Q.
+
+    apply H.
+    trivial.
+
+    Qed.
+
+    (* Ex 5.14 *)
+
+    Theorem leibniz_refl : reflexive A leibniz.
+    unfold reflexive.
+    intros x.
+    unfold leibniz.
+    intros P Px.
+    exact Px.
+    Qed.
+
+    Theorem leibniz_trans : transitive A leibniz.
+    unfold transitive.
+    intros x y z lxy lyz.
+    unfold leibniz in lxy.
+    unfold leibniz in lyz.
+    unfold leibniz.
+    intros P Px.
+    apply lyz.
+    apply lxy.
+    exact Px.
+    Qed.
+
+    Theorem leibniz_equiv : equiv A leibniz.
+    unfold equiv.
+    split.
+    exact leibniz_refl.
+    split.
+    exact leibniz_trans.
+    exact leibniz_sym.
+    Qed.
+
+    Theorem leibniz_least_reflexive : forall R: relation A, reflexive A R -> inclusion A leibniz R.
+    intros R reflAR.
+    unfold inclusion.
+    intros x y lxy.
+    unfold leibniz in lxy.
+    apply lxy.
+    unfold reflexive in reflAR.
+    apply reflAR.
+    Qed.
+
+    Theorem leibniz_eq : forall a b : A, leibniz a b -> a = b.
+    intros a b lab.
+    unfold leibniz in lab.
+    apply lab.
+    reflexivity.
+    Qed.
+
+    Theorem eq_leibniz : forall a b : A, a = b -> leibniz a b.
+    intros a b aeqb.
+    unfold leibniz.
+    intros P Pa.
+    rewrite <- aeqb.
+    exact Pa.
+    Qed.
+
+    Theorem leibniz_ind : forall (x:A)(P: A -> Prop), P x -> forall y:A, leibniz x y -> P y.
+
+    intros x P Px.
+    intros y lxy.
+    unfold leibniz in lxy.
+    apply lxy.
+    exact Px.
+    Qed.
+
+    Unset Implicit Arguments.
+End leibniz.
+
+(* Ex 5.15 *)
+
+Definition my_and (P Q : Prop) :=
+  forall R:Prop, (P -> Q -> R) -> R.
+
+Definition my_or (P Q : Prop) :=
+  forall R:Prop, (P -> R) -> (Q -> R) -> R.
+
+Definition my_ex (A: Set) (P: A -> Prop) :=
+  forall R:Prop, (forall x:A, P x -> R) -> R.
+
+(* Ex 5.15.a *)
+
+Theorem ex_5_15_a : forall P Q : Prop, my_and P Q -> P.
+intros P Q paq.
+unfold my_and in paq.
+apply (paq P).
+intros p q.
+exact p.
+Qed.
+
+Theorem ex_5_15_b : forall P Q : Prop, my_and P Q -> Q.
+intros P Q paq.
+unfold my_and in paq.
+apply (paq Q).
+intros p q.
+exact q.
+Qed.
+
+Theorem ex_5_15_c : forall P Q R : Prop, (P -> Q -> R) -> my_and P Q -> R.
+intros P Q R pqr paq.
+unfold my_and in paq.
+apply (paq R).
+exact pqr.
+Qed.
+
+Theorem ex_5_15_d : forall P Q : Prop, P -> my_or P Q.
+intros P Q poq.
+unfold my_or.
+intros R pr qr.
+apply pr.
+exact poq.
+Qed.
+
+Theorem ex_5_15_e : forall P Q : Prop, Q -> my_or P Q.
+intros P Q poq.
+unfold my_or.
+intros R pr qr.
+apply qr.
+exact poq.
+Qed.
+
+Theorem ex_5_15_f : forall P Q R : Prop, (P -> R) -> (Q -> R) -> my_or P Q -> R.
+intros P Q R pr qr poq.
+unfold my_or in poq.
+apply (poq R).
+exact pr.
+exact qr.
+Qed.
+
+Theorem ex_5_15_g : forall P : Prop, my_or P my_False -> P.
+intros P pof.
+unfold my_or in pof.
+apply (pof P).
+trivial.
+unfold my_False.
+intro f.
+exact (f P).
+Qed.
+
+Theorem ex_5_15_h : forall P Q : Prop, my_or P Q -> my_or Q P.
+intros P Q poq.
+unfold my_or in poq.
+unfold my_or.
+intros R qr pr.
+exact (poq R pr qr).
+Qed.
+
+Theorem ex_5_15_i : forall (A: Set) (P: A -> Prop) (a: A), P a -> my_ex A P.
+intros A P a Pa.
+unfold my_ex.
+intros R foo.
+exact (foo a Pa).
+Qed.
+
+Theorem ex_5_15_j : forall (A: Set) (P: A -> Prop), my_not (my_ex A P) -> forall a : A, my_not (P a).
+intros A AP neap a.
+unfold my_not.
+intro APa.
+unfold my_not in neap.
+apply neap.
+unfold my_ex.
+intros R foo.
+apply (foo a).
+exact APa.
+Qed.
+
+(* Ex 5.16 *)
+
+Definition my_le (n p : nat) :=
+  forall P : nat -> Prop, P n -> (forall q:nat, P q -> P (S q)) -> P p.
+
+(* Ex 5.16.a *)
+
+Lemma my_le_n : forall n : nat, my_le n n.
+intros n.
+unfold my_le.
+intros P Pn H.
+exact Pn.
+Qed.
+
+(* Ex 5.16.b *)
+
+Theorem my_le_S : forall n p : nat, my_le n p -> my_le n (S p).
+intros n p le_n_p.
+unfold my_le.
+intros P Pn H.
+apply H.
+unfold my_le in le_n_p.
+apply le_n_p.
+exact Pn.
+intros q Pq.
+apply H.
+exact Pq.
+Qed.
+
+(* Ex 5.16.c *)
+
+Theorem my_le_le : forall n p : nat, my_le n p -> n <= p.
+intros n p le_n_p.
+unfold my_le in le_n_p.
+apply (le_n_p (le n)).
+Search (?n <= ?n).
+exact (le_refl n).
+intros q n_le_q.
+Search ((?n <= ?m) -> ?n <= (S ?m)).
+exact (le_S n q n_le_q).
+Qed.
